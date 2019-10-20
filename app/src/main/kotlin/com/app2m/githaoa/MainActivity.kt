@@ -15,4 +15,8 @@ class MainActivity : AppCompatActivity() {
     fun gotoTryDataBindingActivity(view: View) {
         startActivity(Intent(this, TryDataBindingActivity::class.java))
     }
+
+    fun doLogin(view: View) {
+//        startActivity(Intent(this, LoginActivity::class.java))
+    }
 }

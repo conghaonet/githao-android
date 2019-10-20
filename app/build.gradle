@@ -6,6 +6,13 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+// To generate Java code suitable for Java or mixed Java and Kotlin modules
+// apply plugin: "androidx.navigation.safeargs"
+
+// to generate Kotlin code suitable for Kotlin-only
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -60,4 +67,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }
