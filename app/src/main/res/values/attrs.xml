@@ -1,0 +1,12 @@
+<resources>
+    <attr name="color_primary_blur" format="color|reference"/>
+    <attr name="color_primary_light" format="color|reference"/>
+    <attr name="icon_color" format="color|reference"/>
+    <attr name="card_background" format="color|reference"/>
+    <attr name="title_color" format="color|reference"/>
+    <attr name="subtitle_color" format="color|reference"/>
+    <attr name="selected_color" format="color|reference"/>
+    <attr name="appbar_theme" format="reference"/>
+    <attr name="popup_theme" format="reference"/>
+    <attr name="popup_menu_theme" format="reference"/>
+</resources>

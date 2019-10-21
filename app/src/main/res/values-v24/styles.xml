@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme25" parent="AppTheme21">
+        <!-- Customize your theme here. -->
+        <item name="android:contextPopupMenuStyle">@style/ContextPopupThemeLight</item>
+    </style>
+    <style name="AppTheme" parent="AppTheme25"/>
+
+
+    <style name="ContextPopupThemeLight" parent="PopupThemeLight">
+        <item name="android:popupBackground">@color/light_window_background</item>
+        <!--
+         ~  Context menu of a RecyclerView is displayed in the wrong location when setting
+         ~  a contextPopupMenuStyle on Android N, set bellow can fix it.
+        -->
+        <item name="android:overlapAnchor">true</item>
+    </style>
+
+</resources>

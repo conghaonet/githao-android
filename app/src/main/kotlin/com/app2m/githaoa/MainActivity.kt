@@ -17,6 +17,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun doLogin(view: View) {
-//        startActivity(Intent(this, LoginActivity::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 }
