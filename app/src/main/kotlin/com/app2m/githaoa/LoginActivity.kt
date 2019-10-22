@@ -2,12 +2,17 @@ package com.app2m.githaoa
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.app2m.githaoa.databinding.ActivityLoginBinding
+import com.app2m.githaoa.network.DataBean
+import com.app2m.githaoa.network.RetrofitClient
 import com.app2m.githaoa.vm.LoginVM
+import kotlinx.coroutines.*
+import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginVM: LoginVM
@@ -29,5 +34,31 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "password: $password", Toast.LENGTH_SHORT).show()
 //            loginVM.tips.value = password
         })
+
+
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val result = RetrofitClient.reqApi.getDataAsync()
+                if (result.isSuccessful) {
+                    Toast.makeText(this@LoginActivity, result.body()?.message, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@LoginActivity, result.errorBody()?.string(), Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@LoginActivity, e.toString(), Toast.LENGTH_SHORT).show()
+            }
+
+/*
+            val result = withContext(Dispatchers.IO){
+//                RetrofitClient.reqApi.getDataAsync().await()
+                try {
+                    RetrofitClient.reqApi.getDataAsync()
+                } catch (e: Exception) {
+                }
+
+            }
+*/
+        }
+
     }
 }

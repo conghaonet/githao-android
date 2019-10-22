@@ -1,3 +1,11 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -15,7 +23,8 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+//    buildToolsVersion "29.0.2"
+
     defaultConfig {
         applicationId "com.app2m.githaoa"
         minSdkVersion 16
@@ -24,14 +33,30 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    if (localProperties.getProperty('key.storeFile') != null) {
+        signingConfigs {
+            app2m {
+                storeFile file(localProperties.getProperty('key.storeFile'))
+                storePassword localProperties.getProperty('key.storePassword')
+                keyAlias localProperties.getProperty('key.keyAlias')
+                keyPassword localProperties.getProperty('key.keyPassword')
+            }
+        }
+    }
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (localProperties.getProperty('key.storeFile') != null) {
+                signingConfig signingConfigs.app2m
+            }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (localProperties.getProperty('key.storeFile') != null) {
+                signingConfig signingConfigs.app2m
+            }
         }
     }
     sourceSets {
@@ -66,10 +91,14 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.appcompat:appcompat-resources:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.core:core:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.preference:preference-ktx:1.1.0'
+    implementation project(":network")
+    implementation "com.squareup.retrofit2:retrofit:2.6.2"
+
 }
