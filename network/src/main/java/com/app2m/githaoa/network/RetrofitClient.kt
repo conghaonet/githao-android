@@ -1,24 +1,20 @@
 package com.app2m.githaoa.network
 
 import com.app2m.githaoa.network.https.Tls12SocketFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 //import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 object  RetrofitClient {
-    private const val BASE_URL =  "http://t.weather.sojson.com/api/"
+    const val BASE_API =  "https://api.github.com/"
+
     val reqApi by lazy {
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BASE_API)
             .addConverterFactory(GsonConverterFactory.create())
-//            .addConverterFactory(Json.nonstrict.asConverterFactory("application/json".toMediaType()))
-//            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(client)
             .build()
         return@lazy retrofit.create(RequestService::class.java)
@@ -27,11 +23,10 @@ object  RetrofitClient {
         OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(GitHubInterceptor())
             .addInterceptor(HttpLoggingInterceptor().apply {
-                this.level = HttpLoggingInterceptor.Level.BASIC
+                this.level = HttpLoggingInterceptor.Level.HEADERS
             })
-//            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
-//            .addInterceptor(SlpRequestInterceptor())
             .enableTls12OnKitkat()
             .build()
     }

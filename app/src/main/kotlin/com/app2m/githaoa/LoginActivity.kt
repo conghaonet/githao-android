@@ -38,9 +38,9 @@ class LoginActivity : AppCompatActivity() {
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val result = RetrofitClient.reqApi.getDataAsync()
+                val result = RetrofitClient.reqApi.getUserAsync()
                 if (result.isSuccessful) {
-                    Toast.makeText(this@LoginActivity, result.body()?.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, result.body()?.login, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@LoginActivity, result.errorBody()?.string(), Toast.LENGTH_SHORT).show()
                 }
