@@ -23,7 +23,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
-//    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "com.app2m.githaoa"
@@ -32,6 +32,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     if (localProperties.getProperty('key.storeFile') != null) {
         signingConfigs {
@@ -88,6 +89,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.appcompat:appcompat-resources:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
@@ -99,6 +101,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.preference:preference-ktx:1.1.0'
     implementation project(":network")
+    implementation project(":base")
     implementation "com.squareup.retrofit2:retrofit:2.6.2"
 
 }

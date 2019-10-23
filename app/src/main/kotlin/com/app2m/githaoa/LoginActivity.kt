@@ -2,13 +2,11 @@ package com.app2m.githaoa
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.app2m.githaoa.databinding.ActivityLoginBinding
-import com.app2m.githaoa.network.DataBean
 import com.app2m.githaoa.network.RetrofitClient
 import com.app2m.githaoa.vm.LoginVM
 import kotlinx.coroutines.*
