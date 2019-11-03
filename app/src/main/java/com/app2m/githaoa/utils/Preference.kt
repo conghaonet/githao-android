@@ -1,4 +1,4 @@
-package com.app2m.githaoa.base
+package com.app2m.githaoa.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
  *
  */
 
-@Deprecated("This class is deprecated.", replaceWith = ReplaceWith("PreferenceUtil"))
+@Deprecated("This class is deprecated.", replaceWith = ReplaceWith("SharedPreferencesUtil"))
 class Preference<T>(appCtx: Context, val name: String, private val default: T) {
 
     private val prefs: SharedPreferences by lazy { appCtx.applicationContext.getSharedPreferences(name, Context.MODE_PRIVATE) }

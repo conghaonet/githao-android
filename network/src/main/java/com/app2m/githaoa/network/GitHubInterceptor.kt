@@ -20,9 +20,9 @@ class GitHubInterceptor: Interceptor {
         val originalRequestUrl = originalRequest.url.toUrl().toHttpUrlOrNull()?.toUri().toString()
         builder = builder.url(originalRequestUrl)
         builder.header("accept", API_VERSION)
-        builder.header("content-type", CONTENT_TYPE)
-        builder.header("authorization", "Basic Y29uZ2hhb25ldDp2NTA1TU5DUA==")
-
+            .header("content-type", CONTENT_TYPE)
+            .header("authorization", SharedPreferencesUtil.getAuthorizationBasic() ?: "")
+//            .header("authorization", "Basic Y29uZ2hhb25ldDp2NTA1TU5DUA==")
         val request = builder.build()
         val response = chain.proceed(request)
         //异常处理
