@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">githao-android</string>
-
-    <!-- onLoginClick -->
     <string name="user_name">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="this_field_cannot_be_empty">This field cannot be empty</string>
+    <string name="login_successful">Login successful</string>
 </resources>

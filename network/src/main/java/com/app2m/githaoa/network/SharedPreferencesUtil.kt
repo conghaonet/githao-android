@@ -29,22 +29,18 @@ object SharedPreferencesUtil {
 
 
     fun getLoginName(default : String? = null): String? {
-        return getSP()
-            .getString(KEY_LOGIN_NAME, default)
+        return getSP().getString(KEY_LOGIN_NAME, default)
     }
     fun putLoginName(login: String) {
-        getSP()
-            .edit().putString(KEY_LOGIN_NAME, login).apply()
+        getSP().edit().putString(KEY_LOGIN_NAME, login).apply()
     }
 
     fun getAuthorizationBasic(default : String = ""): String? {
-        return getSP()
-            .getString(KEY_AUTH_BASIC, default)
+        return getSP().getString(KEY_AUTH_BASIC, default)
     }
     fun putAuthorizationBasic(loginName: String, password: String) {
         val authBasic: String = Credentials.basic(loginName, password)
-        getSP()
-            .edit().putString(KEY_AUTH_BASIC, authBasic).apply()
+        getSP().edit().putString(KEY_AUTH_BASIC, authBasic).apply()
     }
 
     fun getLoginUserData(): UserData? {
