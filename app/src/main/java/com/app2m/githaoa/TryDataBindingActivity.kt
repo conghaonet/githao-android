@@ -1,11 +1,11 @@
 package com.app2m.githaoa
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import com.app2m.githaoa.base.BaseActivity
 import com.app2m.githaoa.databinding.ActivityTryDataBindingBinding
 
-class TryDataBindingActivity : AppCompatActivity() {
+class TryDataBindingActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

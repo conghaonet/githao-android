@@ -2,7 +2,7 @@ package com.app2m.githaoa
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AccelerateInterpolator
 import androidx.databinding.DataBindingUtil
@@ -12,6 +12,7 @@ import com.app2m.githaoa.databinding.ActivityLoginBinding
 import com.app2m.githaoa.vm.LoginVM
 import android.view.View
 import android.widget.Toast
+import com.app2m.githaoa.base.BaseActivity
 import com.app2m.githaoa.network.RetrofitClient
 import com.app2m.githaoa.network.SharedPreferencesUtil
 import com.app2m.githaoa.network.data.AuthorizationData
@@ -21,7 +22,7 @@ import retrofit2.Response
 import java.lang.Exception
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
     private lateinit var loginVM: LoginVM
     private val animatorLoading = AnimatorSet()//组合动画
     private var loginJob: Job? = null
@@ -58,6 +59,7 @@ class LoginActivity : AppCompatActivity() {
                         if (loginResponse.isSuccessful) {
                             SharedPreferencesUtil.putLoginUserData(loginResponse.body())
                             Toast.makeText(this@LoginActivity, R.string.login_successful, Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                         } else {
                             Toast.makeText(this@LoginActivity, loginResponse.errorBody()?.string(), Toast.LENGTH_SHORT).show()
                         }
