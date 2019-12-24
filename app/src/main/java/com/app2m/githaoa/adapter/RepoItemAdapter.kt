@@ -11,29 +11,28 @@ import com.app2m.githaoa.R
 import com.app2m.githaoa.vm.RepoItemVM
 
 
-class RepoItemAdapter(private val list: List<RepoItemVM>) : RecyclerView.Adapter<RepoItemAdapter.ViewHolder>() {
+class RepoItemAdapter(private val list: List<RepoItemVM>) : RecyclerView.Adapter<RepoItemAdapter.RepoViewHolder>() {
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context), R.layout.repo_item, parent, false
         )
         binding.setVariable(BR.adapter, this)
-        val holder = ViewHolder(binding.root)
-        holder.binding = binding
-        return holder
+        return RepoViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding?.setVariable(BR.model, list[position])
+    override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
+        holder.binding.setVariable(BR.model, list[position])
+        //防止刷新闪烁
+        holder.binding.executePendingBindings()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var binding: ViewDataBinding? = null
+    class RepoViewHolder(viewDataBinding: ViewDataBinding) : RecyclerView.ViewHolder(viewDataBinding.root) {
+        val binding = viewDataBinding
 
     }
 
