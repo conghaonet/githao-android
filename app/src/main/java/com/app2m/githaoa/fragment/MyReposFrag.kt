@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.app2m.githaoa.R
 import com.app2m.githaoa.adapter.RepoItemAdapter
 import com.app2m.githaoa.databinding.FragmentReposBinding
@@ -25,6 +27,7 @@ class MyReposFrag: BaseFragment() {
     private lateinit var mBinding: FragmentReposBinding
 
     companion object {
+        val PAGE_SIZE = 30
         fun newInstance(): MyReposFrag {
             return MyReposFrag()
         }
@@ -39,28 +42,48 @@ class MyReposFrag: BaseFragment() {
             mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_repos, container, false)
             mBinding.lifecycleOwner = this
             initRecyclerView()
-            loadData(1)
+            loadData(0)
         }
         return mBinding.root
     }
 
     private fun initRecyclerView() {
         mBinding.swipeRefreshLayout.setOnRefreshListener {
-            loadData(1)
+            loadData(0)
         }
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         adapter = RepoItemAdapter(vmResults)
         mBinding.recyclerView.adapter = adapter
+        mBinding.recyclerView.addOnScrollListener(object : OnScrollListener() {
+            var lastVisibleItem: Int = 0
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.itemCount) {
+                    if (adapter.itemCount % PAGE_SIZE == 0) {
+                        loadData(vmResults.size)
+                    } else {
+                        Toast.makeText(this@MyReposFrag.context, "没有更多数据！", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
 
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                //最后一个可见的ITEM
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+            }
+        })
     }
 
     private fun loadData(offset: Int) {
-        if (offset == 1 && !mBinding.swipeRefreshLayout.isRefreshing) {
+        if (offset == 0 && !mBinding.swipeRefreshLayout.isRefreshing) {
             mBinding.swipeRefreshLayout.isRefreshing = true
         }
+        var pageNo = (offset / PAGE_SIZE) + 1
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val myReposResponse: Response<List<RepoData>> = RetrofitClient.reqApi.getMyRepos(page = offset)
+                val myReposResponse: Response<List<RepoData>> = RetrofitClient.reqApi.getMyRepos(page = pageNo, type = "public")
                 if (myReposResponse.isSuccessful) {
                     Toast.makeText(this@MyReposFrag.context, "length = ${myReposResponse.body()?.size}", Toast.LENGTH_SHORT).show()
                     setViewModel(offset, myReposResponse.body()!!)
