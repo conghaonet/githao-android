@@ -27,6 +27,8 @@
         <item name="colorOnPrimary">@color/onPrimaryColor</item>
         <item name="android:textColorPrimary">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="navigationViewStyle">@style/AppNavigationViewStyle</item>
+<!--        app:itemIconTint="?attr/colorPrimary"-->
 
         <!--以下两行设置光标颜色-->
         <item name="android:textCursorDrawable">@color/primaryColor</item>
@@ -44,4 +46,10 @@
         <item name="android:windowSharedElementEnterTransition" tools:targetApi="LOLLIPOP">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition" tools:targetApi="LOLLIPOP">@android:transition/move</item>
     </style>
+
+    <style name="AppNavigationViewStyle" parent="@style/Widget.MaterialComponents.NavigationView">
+        <item name="itemIconTint">@color/primaryColor</item>
+        <item name="itemTextColor">@color/primaryDarkColor</item>
+    </style>
+
 </resources>
