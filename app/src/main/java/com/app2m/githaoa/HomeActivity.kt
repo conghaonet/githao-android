@@ -14,6 +14,7 @@ import com.app2m.githaoa.TryDayNightActivity.Companion.MODE_NIGHT_ACTION
 import com.app2m.githaoa.base.BaseActivity
 import com.app2m.githaoa.databinding.ActivityHomeBinding
 import com.app2m.githaoa.fragment.MyReposFrag
+import com.app2m.githaoa.fragment.StarredReposFrag
 import com.app2m.githaoa.network.SharedPreferencesUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -57,8 +58,8 @@ class HomeActivity : BaseActivity() {
             }
         }
         val transaction = fragmentManager.beginTransaction()
-        val myReposFrag = MyReposFrag.newInstance()
-        transaction.replace(R.id.content_container, myReposFrag, MyReposFrag::class.java.name)
+        transaction.replace(R.id.content_container, MyReposFrag.newInstance(), MyReposFrag::class.java.name)
+//        transaction.replace(R.id.content_container, StarredReposFrag.newInstance(), MyReposFrag::class.java.name)
         transaction.commitAllowingStateLoss()
     }
 

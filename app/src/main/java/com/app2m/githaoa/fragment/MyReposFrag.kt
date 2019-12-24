@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.app2m.githaoa.R
 import com.app2m.githaoa.adapter.RepoItemAdapter
-import com.app2m.githaoa.databinding.FragmentReposBinding
+import com.app2m.githaoa.databinding.FragmentMyReposBinding
 import com.app2m.githaoa.network.RetrofitClient
 import com.app2m.githaoa.network.data.RepoData
 import com.app2m.githaoa.vm.RepoItemVM
@@ -24,7 +24,7 @@ import retrofit2.Response
 class MyReposFrag: BaseFragment() {
     private val vmResults: MutableList<RepoItemVM> = ArrayList()
     private lateinit var adapter: RepoItemAdapter
-    private lateinit var mBinding: FragmentReposBinding
+    private lateinit var mBinding: FragmentMyReposBinding
 
     companion object {
         val PAGE_SIZE = 30
@@ -39,7 +39,7 @@ class MyReposFrag: BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         if (savedInstanceState == null) {
-            mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_repos, container, false)
+            mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_repos, container, false)
             mBinding.lifecycleOwner = this
             initRecyclerView()
             loadData(0)

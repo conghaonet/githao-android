@@ -6,7 +6,7 @@ import androidx.annotation.NonNull
 import androidx.lifecycle.*
 import com.app2m.githaoa.network.data.RepoData
 
-class RepoItemVM(@NonNull application: Application, private val repo: RepoData): AndroidViewModel(application), LifecycleObserver {
+class RepoItemVM(@NonNull application: Application, val repo: RepoData): AndroidViewModel(application), LifecycleObserver {
     val name: MutableLiveData<String> = MutableLiveData(repo.name)
     val avatarUrl: MutableLiveData<String> = MutableLiveData(repo.owner.avatarUrl)
 
