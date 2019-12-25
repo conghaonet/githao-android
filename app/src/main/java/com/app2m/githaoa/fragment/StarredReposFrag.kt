@@ -62,11 +62,12 @@ class StarredReposFrag : BaseFragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.itemCount) {
                     if (adapter.getRealItemCount() % PAGE_SIZE == 0) {
-//                        adapter.setFootView()
-                        loadData(vmResults.size)
-                    } else {
-//                        adapter.setFootView(R.layout.no_more_footer)
-                        Toast.makeText(recyclerView.context, "没有更多数据！", Toast.LENGTH_SHORT).show()
+                        requestJob?.let {
+                            if(it.isCompleted) {
+                                Log.d(TAG, "loadMore，执行加载更多")
+                                loadData(vmResults.size)
+                            }
+                        }
                     }
                 }
             }
