@@ -5,10 +5,7 @@ import com.app2m.githaoa.network.data.AuthorizationPost
 import com.app2m.githaoa.network.data.RepoData
 import com.app2m.githaoa.network.data.UserData
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface RequestService {
     @GET("weather/city/101310201")
@@ -32,5 +29,13 @@ interface RequestService {
         @Query("type") type: String ="all",
         @Query("sort") sort: String ="full_name",
         @Query("direction") direction: String ="asc"
-        ) : Response<List<RepoData>>
+    ) : Response<List<RepoData>>
+
+    @GET("users/{login}/starred")
+    suspend fun getStarredRepos(
+        @Path("login") login: String,
+        @Query("page") page: Int = 1,
+        @Query("sort") sort: String ="full_name",
+        @Query("direction") direction: String ="asc"
+    ) : Response<List<RepoData>>
 }

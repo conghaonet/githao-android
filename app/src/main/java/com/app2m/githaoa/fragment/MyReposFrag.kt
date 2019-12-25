@@ -30,7 +30,7 @@ class MyReposFrag: BaseFragment() {
     private var mBinding: FragmentMyReposBinding? = null
     private var requestJob: Job? = null
     companion object {
-        const val PAGE_SIZE = 30
+        private const val PAGE_SIZE = 30
         private const val TAG = "MyReposFrag"
         fun newInstance(): MyReposFrag {
             return MyReposFrag()

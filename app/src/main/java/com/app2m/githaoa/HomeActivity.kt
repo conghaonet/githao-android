@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
@@ -26,7 +25,7 @@ import com.bumptech.glide.request.RequestOptions
 
 class HomeActivity : BaseActivity() {
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
-    private var checkedItemId = R.id.menu_my_repos
+    private var checkedItemId = R.id.menu_starred_repos
     private val mBinding : ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
     }
@@ -62,7 +61,7 @@ class HomeActivity : BaseActivity() {
                 fragmentManager.beginTransaction().remove(frag).commitAllowingStateLoss()
             }
         }
-        setContentFragment(MyReposFrag.newInstance())
+        setContentFragment(StarredReposFrag.newInstance())
 
     }
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -95,9 +94,6 @@ class HomeActivity : BaseActivity() {
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.content_container, fragment)
         transaction.commitAllowingStateLoss()
-    }
-    fun gotoDayNightActivity(view: View) {
-        startActivity(Intent(this, TryDayNightActivity::class.java))
     }
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(this.dayNightReceiver)

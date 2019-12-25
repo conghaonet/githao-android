@@ -33,12 +33,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_gravity="center">
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="goto DayNight"
-                        android:onClick="gotoDayNightActivity"/>
                     <FrameLayout
                         android:id="@+id/content_container"
                         android:layout_width="match_parent"
