@@ -4,11 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.app2m.githaoa.TryDayNightActivity.Companion.MODE_NIGHT_ACTION
 import com.app2m.githaoa.base.BaseActivity
@@ -23,6 +26,7 @@ import com.bumptech.glide.request.RequestOptions
 
 class HomeActivity : BaseActivity() {
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
+    private var checkedItemId = R.id.menu_my_repos
     private val mBinding : ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
     }
@@ -32,8 +36,9 @@ class HomeActivity : BaseActivity() {
     private val fragmentManager by lazy {
         supportFragmentManager
     }
-
-    private var myReposFrag: MyReposFrag? = null
+    companion object {
+        private const val TAG = "HomeActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,25 +55,46 @@ class HomeActivity : BaseActivity() {
         mDrawerToggle.syncState()
         mBinding.homeDrawerLayout.addDrawerListener(mDrawerToggle)
 
-        setHeader()
+        initNavigation()
 
         if (savedInstanceState != null) {
             for (frag in fragmentManager.fragments) {
                 fragmentManager.beginTransaction().remove(frag).commitAllowingStateLoss()
             }
         }
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.content_container, MyReposFrag.newInstance(), MyReposFrag::class.java.name)
-//        transaction.replace(R.id.content_container, StarredReposFrag.newInstance(), MyReposFrag::class.java.name)
-        transaction.commitAllowingStateLoss()
+        setContentFragment(MyReposFrag.newInstance())
+
+    }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.d(TAG, "onConfigurationChanged")
     }
 
-    private fun setHeader() {
+    private fun initNavigation() {
         val headerView = mBinding.navigationView.getHeaderView(0)
         val headerAvatar = headerView.findViewById<AppCompatImageView>(R.id.home_header_avatar)
         SharedPreferencesUtil.getLoginUserData()?.let {
             Glide.with(this).load(it.avatarUrl).apply(RequestOptions.bitmapTransform(CircleCrop())).into(headerAvatar)
         }
+        mBinding.navigationView.setCheckedItem(checkedItemId)
+        mBinding.navigationView.setNavigationItemSelectedListener {
+            if (it.isCheckable) {
+                checkedItemId = it.itemId
+            }
+            when (it.itemId) {
+                R.id.menu_my_repos -> setContentFragment(MyReposFrag.newInstance())
+                R.id.menu_starred_repos -> setContentFragment(StarredReposFrag.newInstance())
+                R.id.menu_day_night_mode -> startActivity(Intent(this, TryDayNightActivity::class.java))
+            }
+            mBinding.homeDrawerLayout.closeDrawers()
+            true
+        }
+
+    }
+    private fun setContentFragment(fragment: Fragment) {
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.content_container, fragment)
+        transaction.commitAllowingStateLoss()
     }
     fun gotoDayNightActivity(view: View) {
         startActivity(Intent(this, TryDayNightActivity::class.java))
@@ -85,4 +111,5 @@ class HomeActivity : BaseActivity() {
             recreate()
         }
     }
+
 }

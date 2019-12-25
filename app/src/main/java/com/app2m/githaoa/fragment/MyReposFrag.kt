@@ -1,7 +1,9 @@
 package com.app2m.githaoa.fragment
 
 import android.app.Application
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,43 +20,47 @@ import com.app2m.githaoa.network.data.RepoData
 import com.app2m.githaoa.vm.RepoItemVM
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MyReposFrag: BaseFragment() {
     private val vmResults: MutableList<RepoItemVM> = ArrayList()
     private lateinit var adapter: RepoItemAdapter
-    private lateinit var mBinding: FragmentMyReposBinding
-
+    private var mBinding: FragmentMyReposBinding? = null
+    private var requestJob: Job? = null
     companion object {
-        val PAGE_SIZE = 30
+        const val PAGE_SIZE = 30
+        private const val TAG = "MyReposFrag"
         fun newInstance(): MyReposFrag {
             return MyReposFrag()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        if (savedInstanceState == null) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate savedInstanceState = null is ${savedInstanceState == null}")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d(TAG, "onCreateView savedInstanceState = null is ${savedInstanceState == null}")
+        if (mBinding == null) {
             mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_repos, container, false)
-            mBinding.lifecycleOwner = this
+            mBinding!!.lifecycleOwner = this
             initRecyclerView()
             loadData(0)
         }
-        return mBinding.root
+        return mBinding!!.root
     }
 
     private fun initRecyclerView() {
-        mBinding.swipeRefreshLayout.setOnRefreshListener {
+        mBinding!!.swipeRefreshLayout.setOnRefreshListener {
             loadData(0)
         }
-        mBinding.recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+        mBinding!!.recyclerView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         adapter = RepoItemAdapter(vmResults)
-        mBinding.recyclerView.adapter = adapter
-        mBinding.recyclerView.addOnScrollListener(object : OnScrollListener() {
+        mBinding!!.recyclerView.adapter = adapter
+        mBinding!!.recyclerView.addOnScrollListener(object : OnScrollListener() {
             var lastVisibleItem: Int = 0
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -62,7 +68,7 @@ class MyReposFrag: BaseFragment() {
                     if (adapter.itemCount % PAGE_SIZE == 0) {
                         loadData(vmResults.size)
                     } else {
-                        Toast.makeText(this@MyReposFrag.context, "没有更多数据！", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(recyclerView.context, "没有更多数据！", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -76,12 +82,17 @@ class MyReposFrag: BaseFragment() {
         })
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.d(TAG, "onConfigurationChanged")
+    }
+
     private fun loadData(offset: Int) {
-        if (offset == 0 && !mBinding.swipeRefreshLayout.isRefreshing) {
-            mBinding.swipeRefreshLayout.isRefreshing = true
+        if (offset == 0 && !mBinding!!.swipeRefreshLayout.isRefreshing) {
+            mBinding!!.swipeRefreshLayout.isRefreshing = true
         }
         var pageNo = (offset / PAGE_SIZE) + 1
-        GlobalScope.launch(Dispatchers.Main) {
+        requestJob = GlobalScope.launch(Dispatchers.Main) {
             try {
                 val myReposResponse: Response<List<RepoData>> = RetrofitClient.reqApi.getMyRepos(page = pageNo, type = "public")
                 if (myReposResponse.isSuccessful) {
@@ -93,7 +104,7 @@ class MyReposFrag: BaseFragment() {
             } catch (e: Exception) {
                 Toast.makeText(this@MyReposFrag.context, e.toString(), Toast.LENGTH_LONG).show()
             } finally {
-                mBinding.swipeRefreshLayout.isRefreshing = false
+                mBinding!!.swipeRefreshLayout.isRefreshing = false
             }
         }
     }
@@ -109,5 +120,10 @@ class MyReposFrag: BaseFragment() {
             vmResults.add(itemModel)
         }
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroy() {
+        requestJob?.cancel()
+        super.onDestroy()
     }
 }

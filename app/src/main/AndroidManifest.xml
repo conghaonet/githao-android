@@ -23,7 +23,7 @@
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
         <activity android:name=".TryDayNightActivity" />
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity" android:configChanges="orientation|layoutDirection|screenSize"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".TryDataBindingActivity" />
         <activity android:name=".MainActivity">

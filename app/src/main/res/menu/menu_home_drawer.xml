@@ -1,24 +1,27 @@
 <?xml version ="1.0" encoding ="utf-8"?><!--  Learn More about how to use App Actions: https://developer.android.com/guide/actions/index.html -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/favorite"
-        android:icon="@android:drawable/stat_sys_headset"
-        android:title="我的仓库" />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_my_repos"
+            android:icon="@android:drawable/stat_sys_headset"
+            android:title="My repos" />
 
-    <item
-        android:id="@+id/wallet"
-        android:icon="@android:drawable/ic_dialog_dialer"
-        app:itemIconTint="?attr/colorPrimary"
-        android:title="钱包" />
+        <item
+            android:id="@+id/menu_starred_repos"
+            android:icon="@android:drawable/ic_dialog_dialer"
+            app:itemIconTint="?attr/colorPrimary"
+            android:title="Starred repos" />
+    </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_day_night_mode"
+            android:icon="@android:drawable/sym_call_missed"
+            android:title="DayNight mode" />
+        <item
+            android:id="@+id/menu_file"
+            android:icon="@android:drawable/stat_notify_sdcard_prepare"
+            android:title="文件" />
+    </group>
 
-    <item
-        android:id="@+id/photo"
-        android:icon="@android:drawable/sym_call_missed"
-        android:title="相册" />
-
-    <item
-        android:id="@+id/file"
-        android:icon="@android:drawable/stat_notify_sdcard_prepare"
-        android:title="文件" />
 </menu>
