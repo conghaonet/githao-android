@@ -62,8 +62,10 @@ class StarredReposFrag : BaseFragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.itemCount) {
                     if (adapter.getRealItemCount() % PAGE_SIZE == 0) {
+//                        adapter.setFootView()
                         loadData(vmResults.size)
                     } else {
+//                        adapter.setFootView(R.layout.no_more_footer)
                         Toast.makeText(recyclerView.context, "没有更多数据！", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -71,16 +73,17 @@ class StarredReposFrag : BaseFragment() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    if (isLastPage) {
-//                        adapter.setFootView(R.layout.no_more_footer)
-                    } else {
-                        adapter.setFootView()
-                    }
-                }
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 //最后一个可见的ITEM
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                Log.d(TAG, "lastVisibleItem=$lastVisibleItem  itemCount=${adapter.itemCount}")
+                if (lastVisibleItem + 1 >= adapter.itemCount) {
+                    if (isLastPage) {
+//                        adapter.setFootView(R.layout.no_more_footer)
+                    } else {
+//                        adapter.setFootView(R.layout.load_more_footer)
+                    }
+                }
             }
         })
     }
@@ -115,15 +118,20 @@ class StarredReposFrag : BaseFragment() {
         if (offset == 0) {
             vmResults.clear()
         }
-        if (isLastPage) {
-            adapter.setFootView(null)
-        }
+
         for (item in results) {
             val itemModel = RepoItemVM(Application(), item)
             this.lifecycle.addObserver(itemModel)
             vmResults.add(itemModel)
         }
         adapter.notifyDataSetChanged()
+
+        if (results.size < PAGE_SIZE) {
+            adapter.setFootView(R.layout.no_more_footer)
+        } else {
+            adapter.setFootView(R.layout.load_more_footer)
+        }
+
     }
 
     override fun onDestroy() {

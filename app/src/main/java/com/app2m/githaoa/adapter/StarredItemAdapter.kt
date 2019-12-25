@@ -1,10 +1,13 @@
 package com.app2m.githaoa.adapter
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +27,7 @@ class StarredItemAdapter(private val list: List<RepoItemVM>) : RecyclerView.Adap
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             TYPE_FOOTER -> {
-                val footerView = LayoutInflater.from(parent.context).inflate(footerLayoutId!!, parent, false)
+                val footerView = LayoutInflater.from(parent.context).inflate(R.layout.footer_container, parent,false)
                 FooterViewHolder(footerView)
             }
             else -> {
@@ -37,34 +40,40 @@ class StarredItemAdapter(private val list: List<RepoItemVM>) : RecyclerView.Adap
         }
     }
 
-    override fun getItemCount() = if(footerLayoutId == null) list.size else list.size + 1
+    override fun getItemCount(): Int {
+        return if (footerLayoutId != null && list.isNotEmpty()) {
+            list.size + 1
+        } else {
+            list.size
+        }
+    }
     fun getRealItemCount() = list.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (footerLayoutId != null && position + 1 == itemCount) {
-            TYPE_FOOTER
+        if (footerLayoutId != null) {
+            if (position + 1 == itemCount) {
+                return TYPE_FOOTER
+            } else {
+                return super.getItemViewType(position)
+            }
         } else {
             return super.getItemViewType(position)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (position < list.size) {
+        if (position < getRealItemCount()) {
             onBindRealItem(holder as RepoViewHolder, position)
-        } else if (footerLayoutId != null && position + 1 == list.size) {
+        } else if (footerLayoutId != null && position  == getRealItemCount()) {
             onBindFooter(holder as FooterViewHolder, position)
         }
     }
 
-    fun onBindFooter(holder: FooterViewHolder, position: Int) {
-
-    }
-
-    fun setFootView(@LayoutRes footerId: Int? = DEFAULT_FOOTER_LAYOUT_ID) {
-        if (footerId != footerLayoutId) {
-            footerLayoutId = footerId
-            this.notifyDataSetChanged()
-        }
+    private fun onBindFooter(holder: FooterViewHolder, position: Int) {
+        holder.footerView.removeAllViews()
+        val view = LayoutInflater.from(holder.footerView.context).inflate(footerLayoutId!!, holder.footerView, false)
+        val layoutParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
+        holder.footerView.addView(view, layoutParams)
     }
 
     private fun onBindRealItem(holder: RepoViewHolder, position: Int) {
@@ -77,11 +86,34 @@ class StarredItemAdapter(private val list: List<RepoItemVM>) : RecyclerView.Adap
         holder.binding.executePendingBindings()
     }
 
-    class RepoViewHolder(viewDataBinding: ViewDataBinding) : RecyclerView.ViewHolder(viewDataBinding.root) {
-        val binding = viewDataBinding
-
+    fun setFootView(@LayoutRes @Nullable footerId: Int? = DEFAULT_FOOTER_LAYOUT_ID) {
+        if (footerId == null) {
+            removeFootView()
+        } else {
+            if (footerId != footerLayoutId) {
+                footerLayoutId = footerId
+                if (itemCount == getRealItemCount() + 1) {
+                    notifyItemChanged(itemCount - 1)
+                } else {
+                    notifyItemInserted(itemCount - 1)
+                }
+            }
+        }
     }
 
-    class FooterViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private fun removeFootView() {
+        if (footerLayoutId != null) {
+            footerLayoutId = null
+            notifyItemRemoved(itemCount)
+        }
+    }
+
+    class RepoViewHolder(viewDataBinding: ViewDataBinding) : RecyclerView.ViewHolder(viewDataBinding.root) {
+        val binding = viewDataBinding
+    }
+
+    class FooterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val footerView : ViewGroup = view as ViewGroup
+    }
 
 }
